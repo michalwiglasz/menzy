@@ -121,7 +121,7 @@
         var now = new Date().getHours();
 
         for (var i = 0; i < from.length; i++) {
-            if (from[i] < now && to[i] > now)
+            if (from[i] <= now && to[i] > now)
                 return true;
         }
 
