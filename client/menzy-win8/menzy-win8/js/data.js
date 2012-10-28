@@ -7,11 +7,17 @@
         function groupDataSelector(item) { return item.group; }
     );
 
-    // TODO: Replace the data with your real data.
-    // You can add data from asynchronous sources whenever it becomes available.
-    loadList(list);
-    
-    WinJS.Utilities.markSupportedForProcessing(getTodayHours);
+    // Load list
+    Caching.retrieve('list.json', function success(data) {
+        for (var id in data) {
+            list.push(wakeUp(data[id]));
+        }
+    }, function error() {
+        loadList(list, function store(data) {
+            Caching.store('list.json', data, 86400000);
+        });
+    });
+
 
     WinJS.Namespace.define("Data", {
         items: groupedItems,
@@ -71,32 +77,33 @@
 
     // Returns an array of sample data that can be added to the application's
     // data list. 
-    function loadList(list) {
-        //var noImage = 'http://www.kam.vutbr.cz/obr/logo_kam.png';
-        var noImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXY3B0cPoPAANMAcOba1BlAAAAAElFTkSuQmCC";
-
-        var groups = [
-            { key: "0_fav", title: "Oblíbené menzy" },
-            { key: "1_all", title: "Všechny menzy" }
-        ];
-  
+    function loadList(list, responseCallback) {  
         WinJS.xhr({url: "http://localhost:5000/api/list.json"}).then(
             function (result) {
                 var parsed = JSON.parse(result.response);
                 for (var id in parsed) {
                     var item = parsed[id];
-                    item.group = groups[1];
-                    item.hasImg = !!item.img;
-                    item.img = item.img || noImage;
+                    list.push(wakeUp(item));
+                }
 
-                    list.push(item)
+                if (responseCallback) {
+                    responseCallback(parsed);
                 }
             },
             function (result) {
-                var dialog = Windows.UI.Popups.MessageDialog("Bohužel se nepodařilo stáhnout seznam menz.", "Chybička se vloudila");
+                var dialog = Windows.UI.Popups.MessageDialog("Bohužel se nepodařilo stáhnout seznam menz.", "Server není dostupný.");
                 dialog.commands.append(new Windows.UI.Popups.UICommand("OK"));
                 dialog.showAsync()
         });
+    }
+
+    function wakeUp(item) {
+        //var noImage = 'http://www.kam.vutbr.cz/obr/logo_kam.png';
+        var noImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXY3B0cPoPAANMAcOba1BlAAAAAElFTkSuQmCC";
+        item.group = { key: "all", title: "Všechny menzy" };
+        item.hasImg = !!item.img;
+        item.img = item.img || noImage;
+        return item;
     }
 
     function getTodayHours(hours) {

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask
-from api import api
+from menzy.api import api
 
 app = Flask(__name__)
 app.register_blueprint(api, url_prefix='/api')
