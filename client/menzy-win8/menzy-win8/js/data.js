@@ -19,7 +19,11 @@
         getItemReference: getItemReference,
         getItemsFromGroup: getItemsFromGroup,
         resolveGroupReference: resolveGroupReference,
-        resolveItemReference: resolveItemReference
+        resolveItemReference: resolveItemReference,
+        reloadList: function () {
+            while (list.length) list.pop();
+            loadList(list);
+        }
     });
 
     WinJS.Namespace.define("Converters", {
@@ -72,7 +76,8 @@
         var noImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXY3B0cPoPAANMAcOba1BlAAAAAElFTkSuQmCC";
 
         var groups = [
-            {key: "all", title: "Všechny menzy"}
+            { key: "0_fav", title: "Oblíbené menzy" },
+            { key: "1_all", title: "Všechny menzy" }
         ];
   
         WinJS.xhr({url: "http://localhost:5000/api/list.json"}).then(
@@ -80,7 +85,7 @@
                 var parsed = JSON.parse(result.response);
                 for (var id in parsed) {
                     var item = parsed[id];
-                    item.group = groups[0];
+                    item.group = groups[1];
                     item.hasImg = !!item.img;
                     item.img = item.img || noImage;
 
@@ -88,8 +93,9 @@
                 }
             },
             function (result) {
-                if (errorCb)
-                    errorCb(result.status);
+                var dialog = Windows.UI.Popups.MessageDialog("Bohužel se nepodařilo stáhnout seznam menz.", "Chybička se vloudila");
+                dialog.commands.append(new Windows.UI.Popups.UICommand("OK"));
+                dialog.showAsync()
         });
     }
 

@@ -77,6 +77,10 @@
             z-index: 10;
         }
 
+        .groupeditemspage .groupeditemslist .win-selected .item .image-overlay  {
+            background: rgba(255, 216, 0, 0.4);
+        }
+
         .groupeditemspage .groupeditemslist .item .item-overlay {
             -ms-grid-row: 2;
             -ms-grid-rows: 1fr 21px;
@@ -102,6 +106,7 @@
             }
 
 @media screen and (-ms-view-state: fullscreen-landscape), screen and (-ms-view-state: fullscreen-portrait), screen and (-ms-view-state: filled) {
+
     .groupeditemspage .groupeditemslist .item .item-overlay {
         background: rgba(0,0,0,0.65);
     }
@@ -143,15 +148,20 @@
         -ms-grid-columns: 60px 1fr;
         -ms-grid-rows: 1fr;
         display: -ms-grid;
-        height: 60px;
+        height: 70px;
         width: 272px;
     }
 
         .groupeditemspage .groupeditemslist .item .item-image {
             -ms-grid-column: 1;
             -ms-grid-row-span: 1;
-            height: 60px;
-            width: 60px;
+            height: 70px;
+            width: 70px;
+        }
+
+        .groupeditemspage .groupeditemslist .item.closed .image-overlay {
+            height: 70px;
+            width: 70px;
         }
 
         .groupeditemspage .groupeditemslist .item .item-overlay {
@@ -160,7 +170,7 @@
             -ms-grid-row-align: stretch;
             background: transparent;
             display: inline-block;
-            margin-left: 10px;
+            margin-left: 20px;
             padding: 0;
         }
 
@@ -168,6 +178,9 @@
                 margin-top: 4px;
                 max-height: 40px;
                 width: 202px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             .groupeditemspage .groupeditemslist .item .item-overlay .item-address {

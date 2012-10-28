@@ -32,6 +32,11 @@
                 }
             }.bind(this), true);
 
+            // refresh list button
+            document.getElementById("btnRefreshList").addEventListener("click", function () {
+                Data.reloadList();
+            }, false);
+
             this._initializeLayout(listView, appView.value);
             listView.element.focus();
         },
@@ -56,28 +61,19 @@
         // This function updates the ListView with new layouts
         _initializeLayout: function (listView, viewState) {
             /// <param name="listView" value="WinJS.UI.ListView.prototype" />
+            listView.itemDataSource = Data.items.dataSource;
+            listView.groupDataSource = Data.groups.dataSource;
 
             if (viewState === appViewState.snapped) {
-                listView.itemDataSource = Data.groups.dataSource;
-                listView.groupDataSource = null;
                 listView.layout = new ui.ListLayout();
             } else {
-                listView.itemDataSource = Data.items.dataSource;
-                listView.groupDataSource = Data.groups.dataSource;
                 listView.layout = new ui.GridLayout({ groupHeaderPosition: "top" });
             }
         },
 
         _itemInvoked: function (args) {
-            if (appView.value === appViewState.snapped) {
-                // If the page is snapped, the user invoked a group.
-                var group = Data.groups.getAt(args.detail.itemIndex);
-                this.navigateToGroup(group.key);
-            } else {
-                // If the page is not snapped, the user invoked an item.
-                var item = Data.items.getAt(args.detail.itemIndex);
-                nav.navigate("/pages/itemDetail/itemDetail.html", { item: Data.getItemReference(item) });
-            }
+            var item = Data.items.getAt(args.detail.itemIndex);
+            nav.navigate("/pages/itemDetail/itemDetail.html", { item: Data.getItemReference(item) });
         }
     });
 })();

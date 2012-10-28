@@ -40,12 +40,22 @@
         <header aria-label="Header content" role="banner">
             <button class="win-backbutton" aria-label="Back" disabled type="button"></button>
             <h1 class="titlearea win-type-ellipsis">
-                <span class="pagetitle">Menzy VUT</span>
+                <span class="pagetitle">Jídelníček VUT</span>
             </h1>
         </header>
         <section aria-label="Main content" role="main">
-            <div class="groupeditemslist win-selectionstylefilled" aria-label="List of groups" data-win-control="WinJS.UI.ListView" data-win-options="{ selectionMode: 'none' }"></div>
+            <div class="groupeditemslist win-selectionstylefilled" aria-label="List of groups" data-win-control="WinJS.UI.ListView" data-win-options="{ selectionMode: 'multi' }"></div>
         </section>
     </div>
+
+    <!-- AppBar -->
+    <div id="appBar" data-win-control="WinJS.UI.AppBar" data-win-options="">
+        <button 
+            data-win-control="WinJS.UI.AppBarCommand" 
+            data-win-options="{id:'btnRefreshList',label:'Načíst menzy',icon:'refresh',
+                section:'selection',tooltip:'Znovu načíst seznam menz'}">
+        </button>
+    </div>
+
 </body>
 </html>

@@ -3,7 +3,7 @@
   <Identity Name="02249ed3-d093-4c43-aef4-906aff830471" Version="1.0.0.0" Publisher="CN=Michal" />
   <Properties>
     <DisplayName>menzy-win8</DisplayName>
-    <PublisherDisplayName>Michal</PublisherDisplayName>
+    <PublisherDisplayName>Michal Wiglasz</PublisherDisplayName>
     <Logo>images\storelogo.png</Logo>
   </Properties>
   <Prerequisites>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" StartPage="default.html">
-      <VisualElements DisplayName="Menzy VUT Brno" Logo="images\logo.png" SmallLogo="images\smalllogo.png" Description="Jídelníček menz VUT Brno" ForegroundText="light" BackgroundColor="#003366">
+      <VisualElements DisplayName="Jídelníček VUT" Logo="images\logo.png" SmallLogo="images\smalllogo.png" Description="Jídelníček menz VUT Brno" ForegroundText="light" BackgroundColor="#003366">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="images\splashscreen.png" />
       </VisualElements>
