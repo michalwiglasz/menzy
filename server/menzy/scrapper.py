@@ -46,7 +46,7 @@ def get_info():
         try:
             href = links[0]['href']
             cantine['menu_url'] = base_url + href
-            cantine['id'] = href.split('=')[-1]
+            cantine['id'] = int(href.split('=')[-1])
         except IndexError:
             continue
 
@@ -78,9 +78,13 @@ def get_hours():
     days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
     for row in content.table.find_all('tr'):
+        if not row.td:
+            # skip table header
+            continue
+
         cantine = dict((s, {'from': [], 'to': [], 'text': []}) for s in days)
 
-        id = row.a['href'].split('=')[-1]
+        id = int(row.a['href'].split('=')[-1])
         cells = list(row.find_all('td'))
 
         if (id and len(cells)):
@@ -109,24 +113,53 @@ def _decrypt_hours(text, cantine, day):
         cantine[day]['to'].append(int(h_to.split(':')[0]))
 
 
-def get_menu(url):
+def get_cantine_menu(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text)
     content = soup.find('div', id='contentdiv')
 
     menu = {
         'meals': [],
-        'error': None,
+        'message': None,
     }
+
+    types = {'H': 'main', 'P': 'soup', 'O': 'other'}
 
     if content.table:
         for row in soup.table.find_all('tr'):
-            pass
+            meal = dict((x, None) for x in ['type', 'weight', 'name',
+                                            'price_student', 'price_employee',
+                                            'price_other'])
+            weight = row.find('td', 'levy').small
+            meal['weight'] = get_weight(weight)
+            weight.decompose()
+            meal['type'] = types[row.find('td', 'levy').get_text().strip()]
+            meal['name'] = list(row.find('td', 'levyjid').strings)[0].strip()
+            meal['price_student'] = get_price(row.find('td', 'slcen1'))
+            meal['price_employee'] = get_price(row.find('td', 'slcen2'))
+            meal['price_other'] = get_price(row.find('td', 'slcen3'))
+            menu['meals'].append(meal)
+
+        msg = soup.table.find_previous_sibling('p')
+        if msg:
+            menu['message'] = msg.get_text().strip()
 
     else:
-        menu['error'] = content.p.get_text().strip()
+        if content.p:
+            menu['message'] = content.p.get_text().strip()
 
     return menu
+
+
+def get_weight(element):
+    weight = element.get_text().strip()
+    if weight:
+        weight = int(weight[:-2])
+    return weight
+
+
+def get_price(element):
+    return int(element.get_text().strip()[:-2])
 
 
 if __name__ == '__main__':
