@@ -111,4 +111,4 @@ def deploy():
         prefix = 'source ~/.initenv && workon menzy && '
         run(prefix + 'pip install ./server --upgrade')
 
-    execute(start)
+    execute(restart)
