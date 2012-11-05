@@ -84,32 +84,31 @@ class Git(object):
 
 
 @task
-def deploy():
-    local_git = Git(local=True)
-    branch = local_git.branch
-    puts('\n\nDeploying branch: ' + branch + '\n')
-    #wait()
-
-    #local_git.push(branch)
-
-    #execute(stop)
-    remote_git = Git(local=False)
-    with cd('~/app'):
-        #remote_git.checkout_branch(branch)
-        #remote_git.pull(branch)
-
-        prefix = 'source ~/.initenv && workon menzy && '
-        run(prefix + 'pip install . --upgrade')
-        #run('pip -r requirements.py')
-
-    execute(start)
-
-
-@task
 def stop():
-    run('supervisorctl stop menzy')
+    sudo('supervisorctl stop menzy')
 
 
 @task(alias='start')
 def restart():
-    run('supervisorctl restart menzy')
+    sudo('supervisorctl restart menzy')
+
+
+@task
+def deploy():
+    local_git = Git(local=True)
+    branch = local_git.branch
+    puts('\n\nDeploying branch: ' + branch + '\n')
+    wait()
+
+    local_git.push(branch)
+
+    execute(stop)
+    remote_git = Git(local=False)
+    with cd('~/app'):
+        remote_git.checkout_branch(branch)
+        remote_git.pull(branch)
+
+        prefix = 'source ~/.initenv && workon menzy && '
+        run(prefix + 'pip install ./server --upgrade')
+
+    execute(start)
