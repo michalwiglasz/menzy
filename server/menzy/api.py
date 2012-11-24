@@ -65,3 +65,36 @@ def menu(cantine_id):
     key = 'menu_' + str(cantine_id)
     return cached_json_response(key, cantine_menu_expires,
                       partial(get_cantine_menu, url))
+
+
+@api.route("/menu/fake.json")
+def fake_menu():
+    return json_response({
+        'meals': [
+            {
+                'type': 'main',
+                'weight': 100,
+                'name': 'Cikánská pečeně',
+                'price_student': '44',
+                'price_employee': '48',
+                'price_other': '82',
+            },
+            {
+                'type': 'main',
+                'weight': 100,
+                'name': 'Cikánská pečeně',
+                'price_student': '44',
+                'price_employee': '48',
+                'price_other': '82',
+            },
+            {
+                'type': 'main',
+                'weight': 100,
+                'name': 'Cikánská pečeně',
+                'price_student': '44',
+                'price_employee': '48',
+                'price_other': '82',
+            },
+        ],
+        'message': None,
+    })
