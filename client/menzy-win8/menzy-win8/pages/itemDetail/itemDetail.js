@@ -26,6 +26,8 @@
             }
             element.querySelector(".content").focus();
 
+
+
             // opening hours
             var days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
             var today = new Date().getDay();
@@ -63,6 +65,40 @@
             // 3. change css styles
             element.querySelector("article .item-hours").className += " item-hours-" + maxLength;
             element.querySelector("article .item-image").className += " item-hours-" + maxLength;
+
+
+
+            // menu
+            var menu = new WinJS.Binding.List();
+            var key = 'menu-' + parseInt(item.id) + '.json';
+
+            function setMessage(message) {
+                var msg = message || '';
+                element.querySelector(".message").innerText = msg;
+                if (msg)
+                    element.querySelector(".groupeditemslist").className += ' with-message';
+            }
+
+            Caching.retrieve(key, function success(data) {
+                setMessage(data.message);
+                if (data.meals.length) {
+                    for (var id in data.meals) {
+                        menu.push(data.meals[id]);
+                    }
+                    element.querySelector(".meal-list .header").style.display = 'block';
+                }
+            }, function error() {
+                Data.loadMenu(item.id, menu, setMessage, function store(data) {
+                    if (data.meals.length)
+                        element.querySelector(".meal-list .header").style.display = 'block';
+                    Caching.store(key, data, 300000); // 5 minutes
+                });
+            });
+
+            var listView = element.querySelector(".groupeditemslist").winControl;
+            listView.itemTemplate = element.querySelector(".mealtemplate");
+            listView.layout = new WinJS.UI.ListLayout();
+            listView.itemDataSource = menu.dataSource;
         }
     });
 })();

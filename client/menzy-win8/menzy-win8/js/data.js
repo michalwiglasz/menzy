@@ -29,7 +29,8 @@
         reloadList: function () {
             while (list.length) list.pop();
             loadList(list);
-        }
+        },
+        loadMenu: loadMenu
     });
 
     WinJS.Namespace.define("Converters", {
@@ -75,10 +76,8 @@
         }
     }
 
-    // Returns an array of sample data that can be added to the application's
-    // data list. 
     function loadList(list, responseCallback) {  
-        WinJS.xhr({url: "http://localhost:5000/api/list.json"}).then(
+        WinJS.xhr({url: "http://api.menzy.michalwiglasz.cz/list.json"}).then(
             function (result) {
                 var parsed = JSON.parse(result.response);
                 for (var id in parsed) {
@@ -104,6 +103,33 @@
         item.hasImg = !!item.img;
         item.img = item.img || noImage;
         return item;
+    }
+
+    function loadMenu(id, list, messageCallback, responseCallback) {
+        var menuUrl = "http://api.menzy.michalwiglasz.cz/menu/" + parseInt(id) + ".json";
+        //menuUrl = "http://api.menzy.michalwiglasz.cz/menu/fake.json";
+        WinJS.xhr({ url: menuUrl }).then(
+            function (result) {
+                var parsed = JSON.parse(result.response);
+
+                if (messageCallback) {
+                    messageCallback(parsed.message)
+                }
+
+                for (var id in parsed.meals) {
+                    var item = parsed.meals[id];
+                    list.push(item);
+                }
+
+                if (responseCallback) {
+                    responseCallback(parsed);
+                }
+            },
+            function (result) {
+                var dialog = Windows.UI.Popups.MessageDialog("Bohužel se nepodařilo stáhnout jídelníček.", "Server není dostupný.");
+                dialog.commands.append(new Windows.UI.Popups.UICommand("OK"));
+                dialog.showAsync()
+            });
     }
 
     function getTodayHours(hours) {
@@ -137,7 +163,7 @@
     }
 
     function getToday() {
-        return ['sun', 'mon', 'tue', 'wed', 'thu', 'fri'][new Date().getDay()];
+        return ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sun'][new Date().getDay()];
     }
 
 })();

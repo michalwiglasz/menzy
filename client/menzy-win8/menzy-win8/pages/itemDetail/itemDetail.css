@@ -20,6 +20,66 @@
         width: 480px;
     }
 
+        .itemdetailpage .content article .basic-info {
+            float: left;
+            height: 100%;
+        }
+
+        .itemdetailpage .content article .meal-list {
+            float: left;
+            margin-right: 50px;
+            height: 100%;
+            width: 150%;
+        }
+
+        .itemdetailpage .content article .meal-list h4 {
+            font-size: 16pt;
+            font-weight: 200;
+            line-height: 1.2;
+        }
+
+        .itemdetailpage .content article .meal-list .groupeditemslist {
+            height: calc(100% - 20pt - 1em);
+            clear: left;
+        }
+
+        .itemdetailpage .content article .meal-list .groupeditemslist.with-message {
+            height: calc(100% - 40pt - 1em);
+            margin-top: 1em;
+        }
+
+        .itemdetailpage .content article .meal-list .item-title {
+            width: calc(100% - 3*3.5em);
+            float: left;
+            line-height: 1.6667;
+            font-size: 16pt;
+        }
+
+        .itemdetailpage .content article .meal-list .item-price {
+            width: 3.5em;
+            float: left;
+            font-size: 14pt;
+            line-height: 1.9048;
+            text-align: right;
+        }
+
+        .itemdetailpage .content article .meal-list .header {
+            margin-bottom: 5px;
+            margin-left: 7px;
+            margin-right: 24px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .itemdetailpage .content article .meal-list .header .item-price {
+            width: 2.5em;
+            padding-right: 1em;
+        }
+
+        .itemdetailpage .content article .meal-list .groupeditemslist .item-price:after {
+            content: ',–';
+        }
+
         .itemdetailpage .content article header .item-title {
             margin-bottom: 19px;
         }

@@ -17,7 +17,7 @@
         });
     }
 
-    function retrieve(file, success, error) {
+    function retrieve(file, successCallback, errorCallback) {
         var temporaryFolder = Windows.Storage.ApplicationData.current.temporaryFolder;
         var cached = temporaryFolder.getFileAsync(file).then(function complete(file) {
             Windows.Storage.FileIO.readTextAsync(file).then(function (data) {
@@ -25,25 +25,25 @@
                     var parsed = JSON.parse(data);
                     if (parsed.stored && parsed.expires && parsed.data) {
                         if (new Date() - new Date(parsed.stored) <= parsed.expires) {
-                            success(parsed.data);
+                            successCallback(parsed.data);
 
                         } else {
                             // expired
-                            error();
+                            errorCallback();
                         }
                     } else {
                         // unknown cache file format
-                        error();
+                        errorCallback();
                     }
 
                 } else {
                     // cache file empty
-                    error();
+                    errorCallback();
                 }
             }).done();
 
-        }, function error(e) {
-            error();
+        }, function _error(e) {
+            errorCallback();
         });
     }
 

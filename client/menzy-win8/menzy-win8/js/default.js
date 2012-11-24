@@ -39,6 +39,7 @@
         // complete an asynchronous operation before your application is 
         // suspended, call args.setPromise().
         app.sessionState.history = nav.history;
+
     };
 
     app.start();
